@@ -1,0 +1,2 @@
+gnuplot -e "datafile='Fork.dat'" gnuplot.txt > Fork.png &&
+gnuplot -e "datafile='Spoon.dat'" gnuplot.txt > Spoon.png

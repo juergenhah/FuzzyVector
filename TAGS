@@ -1,0 +1,217 @@
+
+./src/FuzzyVector.hs,4601
+type FuzzyVector FuzzyVector12,13
+type Angle Angle13,14
+universe universe15,16
+vecAdd vecAdd20,21
+vecAdd vecAdd24,25
+vecSub vecSub31,32
+vecSub vecSub35,36
+vecMul vecMul41,42
+vecMul vecMul45,46
+center center51,52
+center center52,53
+type FuzzyScaleFactor FuzzyScaleFactor54,55
+myLambda1 myLambda157,58
+myLambda1 myLambda158,59
+myFuzzyScale1 myFuzzyScale162,63
+myFuzzyScale1 myFuzzyScale163,64
+myFuzzyScale myFuzzyScale65,66
+myFuzzyScale myFuzzyScale66,67
+maximum' maximum'69,70
+maximum' maximum'70,71
+createDescriteLambdaSpace createDescriteLambdaSpace78,79
+createDescriteLambdaSpace createDescriteLambdaSpace79,80
+crispScale crispScale81,82
+crispScale crispScale82,83
+debugFuzzyScale debugFuzzyScale84,85
+debugFuzzyScale debugFuzzyScale85,86
+scalingTest scalingTest87,88
+generateScaledDistribution generateScaledDistribution90,91
+showScaledDistribution showScaledDistribution94,95
+showDistribution showDistribution96,97
+showDistribution showDistribution97,98
+testnormVector testnormVector104,105
+fuzzyAngleDomain fuzzyAngleDomain122,123
+fuzzyAngleDomain fuzzyAngleDomain123,124
+calcAngleFromYAxisClockwise calcAngleFromYAxisClockwise137,138
+calcAngleFromYAxisClockwise calcAngleFromYAxisClockwise138,139
+myFuzzyAngle myFuzzyAngle146,147
+myFuzzyAngle myFuzzyAngle147,148
+myFuzzyAngle1:myFuzzyAngle1151,152
+myFuzzyAngle1 myFuzzyAngle1152,153
+testAngle1 testAngle1156,157
+fuzzyAngleOfVector fuzzyAngleOfVector160,161
+fuzzyAngleOfVector fuzzyAngleOfVector161,162
+createAngleList createAngleList163,164
+createAngleList createAngleList164,165
+myXAngleList myXAngleList166,167
+testFuzzyAngleof testFuzzyAngleof170,171
+fuzzyRotation fuzzyRotation175,176
+fuzzyRotation fuzzyRotation176,177
+debugFuzzyRotation:debugFuzzyRotation178,179
+debugFuzzyRotation debugFuzzyRotation179,180
+testmyFuzzyAngle testmyFuzzyAngle184,185
+testmyFuzzyAngle2 testmyFuzzyAngle2190,191
+testmyFuzzyAngle3 testmyFuzzyAngle3195,196
+testmyFuzzyAngle4 testmyFuzzyAngle4197,198
+debugFuzzyRot debugFuzzyRot199,200
+extractLast extractLast204,205
+extractLast extractLast205,206
+testFuzzyRotation testFuzzyRotation207,208
+rotateCounterClockwise rotateCounterClockwise210,211
+rotateCounterClockwise rotateCounterClockwise211,212
+rotateClockwise rotateClockwise216,217
+rotateClockwise rotateClockwise217,218
+rotclock rotclock221,222
+rotcounter=rotcounter222,223
+rotTest rotTest223,224
+test test225,226
+createDescriteUnitVectorSpace createDescriteUnitVectorSpace227,228
+createDescriteUnitVectorSpace createDescriteUnitVectorSpace228,229
+createDescriteUnitVectorForSpace createDescriteUnitVectorForSpace232,233
+createDescriteUnitVectorForSpace createDescriteUnitVectorForSpace233,234
+testUnit testUnit235,236
+normVector normVector237,238
+normVector normVector238,239
+type FuzzyAngle FuzzyAngle244,245
+--t --t274,275
+testrotate testrotate282,283
+testrotat45 testrotat45283,284
+rtest rtest286,287
+rtes2 rtes2287,288
+rtes3 rtes3288,289
+roundVector roundVector290,291
+roundVector roundVector291,292
+top5test top5test293,294
+top5test1 top5test1294,295
+top5test2 top5test2295,296
+top5test22 top5test22297,298
+top5test12 top5test12298,299
+top5test23 top5test23299,300
+toPoint5Raster toPoint5Raster301,302
+toPoint5Raster toPoint5Raster302,303
+mroundtest mroundtest312,313
+myround myround314,315
+myround myround315,316
+t4 t4317,318
+vecRot vecRot322,323
+vecRot vecRot323,324
+testround testround327,328
+a a333,334
+b b334,335
+createDescriteVectorsForCombination createDescriteVectorsForCombination342,343
+createDescriteVectorsForCombination createDescriteVectorsForCombination343,344
+discretizeFuzzyVector discretizeFuzzyVector350,351
+discretizeFuzzyVector discretizeFuzzyVector351,352
+createDescriteVectorsForSpace createDescriteVectorsForSpace354,355
+createDescriteVectorsForSpace createDescriteVectorsForSpace355,356
+conjunctionLikeSets conjunctionLikeSets363,364
+conjunctionLikeSets conjunctionLikeSets364,365
+disjunctionLikeSets disjunctionLikeSets369,370
+disjunctionLikeSets disjunctionLikeSets370,371
+myLambda myLambda380,381
+myLambda myLambda381,382
+test3 test3384,385
+test4 test4386,387
+test5 test5388,389
+findNearestUnitVector findNearestUnitVector393,394
+findNearestUnitVector findNearestUnitVector394,395
+vectorToPoint vectorToPoint399,400
+vectorToPoint vectorToPoint400,401
+pointToVector pointToVector404,405
+pointToVector pointToVector405,406
+createKDTree createKDTree407,408
+nearest nearest409,410
+
+./src/Helper.hs,304
+module Helper Helper0,1
+printdiscreteMembership printdiscreteMembership10,11
+printdiscreteMembership printdiscreteMembership11,12
+showDistribution showDistribution19,20
+showDistribution showDistribution20,21
+toGnuPlotDataFile toGnuPlotDataFile25,26
+toGnuPlotDataFile toGnuPlotDataFile26,27
+
+./src/ReferenceFrame.hs,378
+module ReferenceFrame ReferenceFrame0,1
+universe universe9,10
+testCenterFunction testCenterFunction11,12
+t2 t214,15
+t3 t316,17
+rotFork rotFork22,23
+gnuScaledFork gnuScaledFork25,26
+isAdditionCommutative isAdditionCommutative30,31
+generateGnuPlotDataFileDistris=generateGnuPlotDataFileDistris36,37
+generateGnuPlotDataFileCalc generateGnuPlotDataFileCalc40,41
+
+./src/Distributions.hs,1001
+module Distributions Distributions0,1
+type Probability Probability4,5
+type  Distribution=Distribution5,6
+data DiscreteSpace DiscreteSpace7,8
+data DiscreteSpace =S S7,8
+data DiscreteSpace =S {minX:minX7,8
+                          , minY:minY8,9
+                          , maxX:maxX9,10
+                          , maxY:maxY10,11
+                          , stepsize:stepsize11,12
+subFork subFork14,15
+subFork subFork15,16
+subSpoon subSpoon23,24
+subSpoon subSpoon24,25
+newFork newFork33,34
+newFork newFork34,35
+myFork myFork42,43
+myFork myFork43,44
+toRotFork toRotFork50,51
+toRotFork toRotFork51,52
+toRotSpoon toRotSpoon59,60
+toRotSpoon toRotSpoon60,61
+normSpoon normSpoon67,68
+normSpoon normSpoon68,69
+mySpoon mySpoon75,76
+mySpoon mySpoon76,77
+myPyramide myPyramide83,84
+myPyramide myPyramide84,85
+mySteps mySteps92,93
+mySteps mySteps93,94
+myXAxis myXAxis103,104
+myXAxis myXAxis104,105
+myYAxis myYAxis111,112
+myYAxis myYAxis112,113
+
+./src/ParallelVectors.hs,44
+module ParallelVectors ParallelVectors0,1
+
+./Setup.hs,15
+main main1,2
+
+./dist/build/autogen/Paths_ReferenceFrame.hs,978
+module Paths_ReferenceFrame Paths_ReferenceFrame0,1
+catchIO catchIO11,12
+catchIO catchIO12,13
+version version14,15
+version version15,16
+bindir, libdir, datadir, libexecdir, sysconfdir sysconfdir16,17
+bindir, libdir, datadir, libexecdir,libexecdir16,17
+bindir, libdir, datadir,datadir16,17
+bindir, libdir,libdir16,17
+bindir,bindir16,17
+bindir bindir18,19
+libdir libdir19,20
+datadir datadir20,21
+libexecdir libexecdir21,22
+sysconfdir sysconfdir22,23
+getBinDir, getLibDir, getDataDir, getLibexecDir, getSysconfDir getSysconfDir24,25
+getBinDir, getLibDir, getDataDir, getLibexecDir,getLibexecDir24,25
+getBinDir, getLibDir, getDataDir,getDataDir24,25
+getBinDir, getLibDir,getLibDir24,25
+getBinDir,getBinDir24,25
+getBinDir getBinDir25,26
+getLibDir getLibDir26,27
+getDataDir getDataDir27,28
+getLibexecDir getLibexecDir28,29
+getSysconfDir getSysconfDir29,30
+getDataFileName getDataFileName31,32
+getDataFileName getDataFileName32,33

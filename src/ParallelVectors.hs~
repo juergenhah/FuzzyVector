@@ -1,0 +1,11 @@
+module ParallelVectors where
+
+import qualified Control.Concurrent.Thread as Thread ( forkIO, result )
+
+
+main = do (tid, wait) <- Thread.forkIO $ do x <- map (\a-> (a,myFuzzyAngle myXAxis myYAxis universe a))  [0,1..10] -- 90
+                                           return x
+         putStrLn "hallo"
+         -- one other forkI
+         x <- Thread.result =<< wait
+         putStrLn $ show x

@@ -1,0 +1,107 @@
+module ReferenceFrame where
+
+import qualified Data.Vector.Storable as V
+import qualified Numeric.LinearAlgebra as N
+
+
+import           Helper
+import Distributions
+import FuzzyVector
+
+t2 = createDescriteVectorsForSpace universe 
+
+t3 = (val,comb)
+ where v =(V.fromList [2,0])
+       val = maximum' . map myFork $ comb
+       comb = myCombinations universe 2 v
+
+universe = S (-10) (-10) 10 10 1
+-- * initialize membership Functions
+gnuScaledFork = writediscreteMembershiptoFile ((discretizeFuzzyVector universe  a,b,universe))
+  where a = (scale subFork universe 2)
+        b = "ScaledsubFork.dat"
+
+memberFunctions=[myFork,mySpoon,myPyramide,mySteps]
+ 
+
+distribuNames=["Fork.dat","Spoon.dat","Pyramide.dat","Steps.dat","RotFork.dat"]
+
+prepareBasicFunctions space funcsList namesList= zipWith (\a b -> (discretizeFuzzyVector space  a,b,space)) funcsList namesList
+
+
+-- ** combined membership functions
+combinedMemberFuncP = [forkAddSpoon,forkAddPyramide,spoonAddSteps,pyraAddSteps,stepsAddPyramide,forkSubSpoon,spoonSubFork]
+ where forkAddSpoon = vecAdd myFork mySpoon
+       forkAddPyramide = vecAdd myFork myPyramide
+       spoonAddSteps= vecAdd mySpoon mySteps
+       pyraAddSteps= vecAdd myPyramide mySteps
+       stepsAddPyramide = vecAdd mySteps myPyramide
+       forkSubSpoon = vecSub myFork mySpoon
+       spoonSubFork = vecSub mySpoon myFork
+
+diCombNames= ["ForkAddSpoon.dat","ForkAddPyramide.dat","SpoonAddSteps.dat","PyramideAddSteps.dat","StepsAddPyramide.dat","ForkSubSpoon.dat","SpoonSubFork.dat"]
+
+prepareCombinedFunctions space funcList nameList = zipWith (\a b -> (discretizeFuzzyVector space  (a space),b,space)) funcList nameList
+
+-- * printing the distribution on the command line
+printBasicMembership space func name= mapM_ printdiscreteMembership $prepareBasicFunctions space [func]  [name]
+
+       
+printCombinedMembership space func name =  mapM_ printdiscreteMembership $ prepareCombinedFunctions space [func] [name]
+
+cmdLineOutput = mapM_ printdiscreteMembership $ prepareBasicFunctions universe memberFunctions distribuNames
+
+-- *  empirische Beweis, dass addition kummutativ ist
+isAdditionCommutative space=discretizeFuzzyVector space (vecAdd mySpoon newFork  space) == (discretizeFuzzyVector space (vecAdd newFork mySpoon space))
+
+
+
+-- * Gnuplot data exports
+
+--rotMyFork = printBasicMembership universe (vecRot myFork universe 45) "rotFork.dat"
+
+rotFork = (vecRot myFork universe 45) (V.fromList [0,0])
+
+--scaledFork= printBasicMembership universe (scale myFork universe 2) "rotFork.dat"
+
+gnuPlotExport=  mapM_ writediscreteMembershiptoFile $ prepareBasicFunctions universe memberFunctions distribuNames
+
+gnuPlotExportComb=  mapM_ writediscreteMembershiptoFile $ prepareCombinedFunctions universe combinedMemberFuncP diCombNames
+
+
+
+
+
+{--
+
+
+test probSpace= map (\x -> vecDot myPyramide mySteps x (V.fromList [3,3])) (fst probSpace)
+testp = printDistribution test 11
+
+-- create vectors to show the distribution functions
+
+
+---
+
+distributionPyramideAddSpoon =  zipWith (conjunctionLikeSets myPyramide mySpoon) probSpace2 probSpace2
+
+printPyramideAddSpoon = printDistribution distributionPyramideAddSpoon 11
+
+
+distributionPyramideAddSteps =  zipWith (conjunctionLikeSets myPyramide mySteps) probSpace2 probSpace2
+distributionPyramideSubSteps =  zipWith (disjunctionLikeSets myPyramide mySteps) probSpace2 probSpace2
+printPyramideAddSteps = printDistribution distributionPyramideAddSteps 11
+printPyramideSubSteps = printDistribution distributionPyramideSubSteps 11
+-- other resuolution
+
+-- | TODO
+vecDot :: ( V.Vector Float -> Probability) ->( V.Vector Float -> Probability)-> V.Vector Float ->  V.Vector Float -> Probability
+vecDot myA myB xi xj = (N.dot xi xj) -- * vecAdd myA myB xi xj
+
+distributionForkConjunctionSpoon = zipWith (conjunctionLikeSets myFork mySpoon) probSpace2 probSpace2
+distributionForkDisjunctionSpoon= zipWith (disjunctionLikeSets myFork mySpoon) probSpace2 probSpace2
+
+printForkConjSpoon = printDistribution distributionForkConjunctionSpoon 11
+printForkDisjSpoon = printDistribution distributionForkDisjunctionSpoon 11
+--}
+
