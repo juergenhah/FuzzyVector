@@ -1,188 +1,326 @@
 
-./src/FuzzyVector.hs,4601
-type FuzzyVector FuzzyVector12,13
-type Angle Angle13,14
-universe universe15,16
-vecAdd vecAdd20,21
-vecAdd vecAdd24,25
-vecSub vecSub31,32
-vecSub vecSub35,36
-vecMul vecMul41,42
-vecMul vecMul45,46
-center center51,52
-center center52,53
-type FuzzyScaleFactor FuzzyScaleFactor54,55
-myLambda1 myLambda157,58
-myLambda1 myLambda158,59
-myFuzzyScale1 myFuzzyScale162,63
-myFuzzyScale1 myFuzzyScale163,64
-myFuzzyScale myFuzzyScale65,66
-myFuzzyScale myFuzzyScale66,67
-maximum' maximum'69,70
-maximum' maximum'70,71
-createDescriteLambdaSpace createDescriteLambdaSpace78,79
-createDescriteLambdaSpace createDescriteLambdaSpace79,80
-crispScale crispScale81,82
-crispScale crispScale82,83
-debugFuzzyScale debugFuzzyScale84,85
-debugFuzzyScale debugFuzzyScale85,86
-scalingTest scalingTest87,88
-generateScaledDistribution generateScaledDistribution90,91
-showScaledDistribution showScaledDistribution94,95
-showDistribution showDistribution96,97
-showDistribution showDistribution97,98
-testnormVector testnormVector104,105
-fuzzyAngleDomain fuzzyAngleDomain122,123
-fuzzyAngleDomain fuzzyAngleDomain123,124
-calcAngleFromYAxisClockwise calcAngleFromYAxisClockwise137,138
-calcAngleFromYAxisClockwise calcAngleFromYAxisClockwise138,139
-myFuzzyAngle myFuzzyAngle146,147
-myFuzzyAngle myFuzzyAngle147,148
-myFuzzyAngle1:myFuzzyAngle1151,152
-myFuzzyAngle1 myFuzzyAngle1152,153
-testAngle1 testAngle1156,157
-fuzzyAngleOfVector fuzzyAngleOfVector160,161
-fuzzyAngleOfVector fuzzyAngleOfVector161,162
-createAngleList createAngleList163,164
-createAngleList createAngleList164,165
-myXAngleList myXAngleList166,167
-testFuzzyAngleof testFuzzyAngleof170,171
-fuzzyRotation fuzzyRotation175,176
-fuzzyRotation fuzzyRotation176,177
-debugFuzzyRotation:debugFuzzyRotation178,179
-debugFuzzyRotation debugFuzzyRotation179,180
-testmyFuzzyAngle testmyFuzzyAngle184,185
-testmyFuzzyAngle2 testmyFuzzyAngle2190,191
-testmyFuzzyAngle3 testmyFuzzyAngle3195,196
-testmyFuzzyAngle4 testmyFuzzyAngle4197,198
-debugFuzzyRot debugFuzzyRot199,200
-extractLast extractLast204,205
-extractLast extractLast205,206
-testFuzzyRotation testFuzzyRotation207,208
-rotateCounterClockwise rotateCounterClockwise210,211
-rotateCounterClockwise rotateCounterClockwise211,212
-rotateClockwise rotateClockwise216,217
-rotateClockwise rotateClockwise217,218
-rotclock rotclock221,222
-rotcounter=rotcounter222,223
-rotTest rotTest223,224
-test test225,226
-createDescriteUnitVectorSpace createDescriteUnitVectorSpace227,228
-createDescriteUnitVectorSpace createDescriteUnitVectorSpace228,229
-createDescriteUnitVectorForSpace createDescriteUnitVectorForSpace232,233
-createDescriteUnitVectorForSpace createDescriteUnitVectorForSpace233,234
-testUnit testUnit235,236
-normVector normVector237,238
-normVector normVector238,239
-type FuzzyAngle FuzzyAngle244,245
---t --t274,275
-testrotate testrotate282,283
-testrotat45 testrotat45283,284
-rtest rtest286,287
-rtes2 rtes2287,288
-rtes3 rtes3288,289
-roundVector roundVector290,291
-roundVector roundVector291,292
-top5test top5test293,294
-top5test1 top5test1294,295
-top5test2 top5test2295,296
-top5test22 top5test22297,298
-top5test12 top5test12298,299
-top5test23 top5test23299,300
-toPoint5Raster toPoint5Raster301,302
-toPoint5Raster toPoint5Raster302,303
-mroundtest mroundtest312,313
-myround myround314,315
-myround myround315,316
-t4 t4317,318
-vecRot vecRot322,323
-vecRot vecRot323,324
-testround testround327,328
-a a333,334
-b b334,335
-createDescriteVectorsForCombination createDescriteVectorsForCombination342,343
-createDescriteVectorsForCombination createDescriteVectorsForCombination343,344
-discretizeFuzzyVector discretizeFuzzyVector350,351
-discretizeFuzzyVector discretizeFuzzyVector351,352
-createDescriteVectorsForSpace createDescriteVectorsForSpace354,355
-createDescriteVectorsForSpace createDescriteVectorsForSpace355,356
-conjunctionLikeSets conjunctionLikeSets363,364
-conjunctionLikeSets conjunctionLikeSets364,365
-disjunctionLikeSets disjunctionLikeSets369,370
-disjunctionLikeSets disjunctionLikeSets370,371
-myLambda myLambda380,381
-myLambda myLambda381,382
-test3 test3384,385
-test4 test4386,387
-test5 test5388,389
-findNearestUnitVector findNearestUnitVector393,394
-findNearestUnitVector findNearestUnitVector394,395
-vectorToPoint vectorToPoint399,400
-vectorToPoint vectorToPoint400,401
-pointToVector pointToVector404,405
-pointToVector pointToVector405,406
-createKDTree createKDTree407,408
-nearest nearest409,410
+./src/FuzzyVector.hs,2426
+type MemberShipValue MemberShipValue46,47
+type FuzzyVector FuzzyVector49,50
+type ScaleFactor ScaleFactor52,53
+type FuzzyScaleFactor FuzzyScaleFactor55,56
+type FuzzyAngle FuzzyAngle58,59
+fuzzyThresholdTest fuzzyThresholdTest61,62
+fuzzyThresholdTest fuzzyThresholdTest65,66
+calculateFuzzyScaleFactor calculateFuzzyScaleFactor72,73
+calculateFuzzyScaleFactor calculateFuzzyScaleFactor76,77
+calculateFuzzyScaleFactor' calculateFuzzyScaleFactor'80,81
+calculateFuzzyScaleFactor' calculateFuzzyScaleFactor'84,85
+lookupScale lookupScale89,90
+lookupScale lookupScale91,92
+createFuzzyScaleFactor createFuzzyScaleFactor94,95
+createFuzzyScaleFactor createFuzzyScaleFactor98,99
+mean mean104,105
+mean mean106,107
+fuzzyScale fuzzyScale110,111
+fuzzyScale fuzzyScale113,114
+crispScale crispScale119,120
+crispScale crispScale122,123
+fuzzyCentroidScale fuzzyCentroidScale125,126
+fuzzyCentroidScale fuzzyCentroidScale129,130
+calcCentroidFuzzyScaleFactor calcCentroidFuzzyScaleFactor133,134
+calcCentroidFuzzyScaleFactor calcCentroidFuzzyScaleFactor136,137
+maximum' maximum'142,143
+maximum' maximum'144,145
+debugFuzzyScale debugFuzzyScale152,153
+debugFuzzyScale debugFuzzyScale156,157
+calculateFuzzyAngle calculateFuzzyAngle168,169
+calculateFuzzyAngle calculateFuzzyAngle172,173
+calculateFuzzyAngle' calculateFuzzyAngle'180,181
+calculateFuzzyAngle' calculateFuzzyAngle'183,184
+lookupFuzzyAngle lookupFuzzyAngle189,190
+lookupFuzzyAngle lookupFuzzyAngle191,192
+fuzzyAngleofFuzzyVector fuzzyAngleofFuzzyVector194,195
+fuzzyAngleofFuzzyVector fuzzyAngleofFuzzyVector197,198
+fuzzyRotation fuzzyRotation201,202
+fuzzyRotation fuzzyRotation205,206
+crispRotation crispRotation212,213
+crispRotation crispRotation215,216
+fuzzyCentroidRotation fuzzyCentroidRotation218,219
+fuzzyCentroidRotation fuzzyCentroidRotation222,223
+calcCentroidAngle calcCentroidAngle226,227
+calcCentroidAngle calcCentroidAngle229,230
+debugFuzzyRotation debugFuzzyRotation233,234
+debugFuzzyRotation debugFuzzyRotation238,239
+translateToCenterWithCentroid translateToCenterWithCentroid251,252
+translateToCenterWithCentroid translateToCenterWithCentroid254,255
+crispTranslate crispTranslate258,259
+crispTranslate crispTranslate261,262
+calcCentroid calcCentroid265,266
+calcCentroid calcCentroid268,269
+fuzzyComplement fuzzyComplement273,274
+fuzzyComplement fuzzyComplement276,277
 
-./src/Helper.hs,304
-module Helper Helper0,1
-printdiscreteMembership printdiscreteMembership10,11
-printdiscreteMembership printdiscreteMembership11,12
-showDistribution showDistribution19,20
-showDistribution showDistribution20,21
-toGnuPlotDataFile toGnuPlotDataFile25,26
-toGnuPlotDataFile toGnuPlotDataFile26,27
+./src/BinaryFuzzyOperation.hs,840
+module BinaryFuzzyOperation BinaryFuzzyOperation13,14
+type BinaryVectorOperation BinaryVectorOperation30,31
+fuzzyIntersection fuzzyIntersection33,34
+fuzzyIntersection fuzzyIntersection36,37
+fuzzyUnion fuzzyUnion39,40
+fuzzyUnion fuzzyUnion42,43
+binaryFuzzyOperation binaryFuzzyOperation45,46
+binaryFuzzyOperation binaryFuzzyOperation50,51
+binaryFuzzyOperation' binaryFuzzyOperation'54,55
+binaryFuzzyOperation' binaryFuzzyOperation'59,60
+evalSpaceParallel evalSpaceParallel64,65
+evalSpaceParallel evalSpaceParallel70,71
+fuzzyAdd fuzzyAdd122,123
+fuzzyAdd fuzzyAdd126,127
+fuzzySub fuzzySub129,130
+fuzzySub fuzzySub133,134
+center center137,138
+center center140,141
+scaleAasBtoC scaleAasBtoC143,144
+scaleAasBtoC scaleAasBtoC148,149
+scaleAasBtoC' scaleAasBtoC'152,153
+scaleAasBtoC' scaleAasBtoC'158,159
 
-./src/ReferenceFrame.hs,378
-module ReferenceFrame ReferenceFrame0,1
-universe universe9,10
-testCenterFunction testCenterFunction11,12
-t2 t214,15
-t3 t316,17
-rotFork rotFork22,23
-gnuScaledFork gnuScaledFork25,26
-isAdditionCommutative isAdditionCommutative30,31
-generateGnuPlotDataFileDistris=generateGnuPlotDataFileDistris36,37
-generateGnuPlotDataFileCalc generateGnuPlotDataFileCalc40,41
+./src/LatexExport.hs,332
+module LatexExport LatexExport11,12
+convertScaleFactor4tikz convertScaleFactor4tikz22,23
+convertScaleFactor4tikz convertScaleFactor4tikz24,25
+getZeroProbAngles getZeroProbAngles27,28
+getZeroProbAngles getZeroProbAngles30,31
+getNonZeroProbAngles getNonZeroProbAngles33,34
+getNonZeroProbAngles getNonZeroProbAngles36,37
 
-./src/Distributions.hs,1001
-module Distributions Distributions0,1
-type Probability Probability4,5
-type  Distribution=Distribution5,6
-data DiscreteSpace DiscreteSpace7,8
-data DiscreteSpace =S S7,8
-data DiscreteSpace =S {minX:minX7,8
-                          , minY:minY8,9
-                          , maxX:maxX9,10
-                          , maxY:maxY10,11
-                          , stepsize:stepsize11,12
-subFork subFork14,15
-subFork subFork15,16
-subSpoon subSpoon23,24
-subSpoon subSpoon24,25
-newFork newFork33,34
-newFork newFork34,35
-myFork myFork42,43
-myFork myFork43,44
-toRotFork toRotFork50,51
-toRotFork toRotFork51,52
-toRotSpoon toRotSpoon59,60
-toRotSpoon toRotSpoon60,61
-normSpoon normSpoon67,68
-normSpoon normSpoon68,69
-mySpoon mySpoon75,76
-mySpoon mySpoon76,77
-myPyramide myPyramide83,84
-myPyramide myPyramide84,85
-mySteps mySteps92,93
-mySteps mySteps93,94
-myXAxis myXAxis103,104
-myXAxis myXAxis104,105
-myYAxis myYAxis111,112
-myYAxis myYAxis112,113
+./src/FuzzyTemplates.hs,578
+module FuzzyTemplates FuzzyTemplates11,12
+trapez trapez24,25
+trapez trapez30,31
+symetric2DTrapez symetric2DTrapez42,43
+symetric2DTrapez symetric2DTrapez48,49
+fuzzyCircleTemplate fuzzyCircleTemplate53,54
+fuzzyCircleTemplate fuzzyCircleTemplate58,59
+isInsideCircle isInsideCircle64,65
+isInsideCircle isInsideCircle68,69
+fuzzyDirectionTemplate fuzzyDirectionTemplate75,76
+fuzzyDirectionTemplate fuzzyDirectionTemplate80,81
+isBetweenAngles isBetweenAngles88,89
+isBetweenAngles isBetweenAngles92,93
+normalize normalize107,108
+normalize normalize109,110
 
-./src/ParallelVectors.hs,44
-module ParallelVectors ParallelVectors0,1
+./src/CrispVector.hs,674
+type CrispVector CrispVector27,28
+type Angle Angle30,31
+crispVector crispVector33,34
+crispVector crispVector36,37
+getX getX39,40
+getX getX41,42
+getY getY44,45
+getY getY46,47
+scaleCrispVector scaleCrispVector49,50
+scaleCrispVector scaleCrispVector52,53
+sumVec sumVec56,57
+sumVec sumVec58,59
+distance distance62,63
+distance distance65,66
+calcAngleFromYAxisClockwise calcAngleFromYAxisClockwise73,74
+calcAngleFromYAxisClockwise calcAngleFromYAxisClockwise75,76
+rotateCounterClockwise rotateCounterClockwise83,84
+rotateCounterClockwise rotateCounterClockwise86,87
+rotateClockwise rotateClockwise92,93
+rotateClockwise rotateClockwise95,96
+
+./src/FuzzyExamples.hs,1047
+ module FuzzyExamples FuzzyExamples12,13
+originTrapez originTrapez20,21
+originTrapez originTrapez22,23
+fiveFiveTrapez fiveFiveTrapez24,25
+fiveFiveTrapez fiveFiveTrapez26,27
+fuzzyFork fuzzyFork28,29
+fuzzyFork fuzzyFork30,31
+fuzzySpoon fuzzySpoon36,37
+fuzzySpoon fuzzySpoon38,39
+fuzzySpoon2 fuzzySpoon244,45
+fuzzySpoon2 fuzzySpoon246,47
+house4quadrant house4quadrant52,53
+house4quadrant house4quadrant54,55
+house house61,62
+house house63,64
+houseFront houseFront70,71
+houseFront houseFront72,73
+person person77,78
+person person79,80
+person4quadrant person4quadrant86,87
+person4quadrant person4quadrant88,89
+objA objA95,96
+objA objA97,98
+centerobjA centerobjA104,105
+centerobjA centerobjA106,107
+objB objB113,114
+objB objB115,116
+largehouse largehouse129,130
+largehouse largehouse131,132
+largehouseFront largehouseFront138,139
+largehouseFront largehouseFront140,141
+tree tree147,148
+tree tree149,150
+simon simon151,152
+simon simon153,154
+north north160,161
+north north162,163
+
+./src/GnuplotExport.hs,576
+module GnuplotExport GnuplotExport11,12
+makeInteractiveMesh makeInteractiveMesh34,35
+makeInteractiveMesh makeInteractiveMesh37,38
+defltOpts defltOpts43,44
+defltOpts defltOpts44,45
+makePngMesh makePngMesh49,50
+makePngMesh makePngMesh53,54
+makePngMap makePngMap61,62
+makePngMap makePngMap65,66
+createMeshData createMeshData71,72
+createMeshData createMeshData74,75
+exportFuzzyVectorstoPng exportFuzzyVectorstoPng79,80
+exportFuzzyVectorstoPng exportFuzzyVectorstoPng83,84
+showFuzzyVectors showFuzzyVectors86,87
+showFuzzyVectors showFuzzyVectors89,90
+
+./src/SpatialTemplates.hs,1145
+module SpatialTemplates SpatialTemplates11,12
+fuzzyGroundTemplate fuzzyGroundTemplate20,21
+fuzzyGroundTemplate fuzzyGroundTemplate22,23
+bigfuzzyGroundTemplate bigfuzzyGroundTemplate24,25
+bigfuzzyGroundTemplate bigfuzzyGroundTemplate26,27
+allSpatialTemplates allSpatialTemplates29,30
+allSpatialTemplateNames allSpatialTemplateNames31,32
+namedSpatialTemplates namedSpatialTemplates34,35
+fuzzyHere fuzzyHere36,37
+fuzzyHere fuzzyHere38,39
+fuzzyNear fuzzyNear41,42
+fuzzyNear fuzzyNear43,44
+fuzzyFar fuzzyFar46,47
+fuzzyFar fuzzyFar48,49
+fuzzyVeryFar fuzzyVeryFar50,51
+fuzzyVeryFar fuzzyVeryFar52,53
+fuzzyFront fuzzyFront55,56
+fuzzyFront fuzzyFront57,58
+fuzzyBack fuzzyBack59,60
+fuzzyBack fuzzyBack61,62
+fuzzyRight fuzzyRight63,64
+fuzzyRight fuzzyRight65,66
+fuzzyLeft fuzzyLeft67,68
+fuzzyLeft fuzzyLeft69,70
+fuzzyFrontRight fuzzyFrontRight71,72
+fuzzyFrontRight fuzzyFrontRight73,74
+fuzzyFrontLeft fuzzyFrontLeft75,76
+fuzzyFrontLeft fuzzyFrontLeft77,78
+fuzzyBackRight fuzzyBackRight79,80
+fuzzyBackRight fuzzyBackRight81,82
+fuzzyBackLeft fuzzyBackLeft83,84
+fuzzyBackLeft fuzzyBackLeft85,86
+
+./src/ShowFuzzyVector.hs,378
+module ShowFuzzyVector ShowFuzzyVector11,12
+type Distribution=Distribution22,23
+showDistribution showDistribution25,26
+showDistribution showDistribution28,29
+printdiscreteMembership printdiscreteMembership32,33
+printdiscreteMembership printdiscreteMembership34,35
+discretizeFuzzyVector discretizeFuzzyVector42,43
+discretizeFuzzyVector discretizeFuzzyVector45,46
+
+./src/ReferenceFrameTransformations.hs,182
+module ReferenceFrameTransformations ReferenceFrameTransformations12,13
+transform transform22,23
+transform transform29,30
+satisfies satisfies41,42
+satisfies satisfies46,47
+
+./src/Main.hs,1722
+module Main Main12,13
+discreteSpace discreteSpace34,35
+main:main42,43
+main main43,44
+createFiguresForPaper createFiguresForPaper50,51
+createFiguresForPaper createFiguresForPaper51,52
+calctransforms calctransforms63,64
+calctransforms calctransforms64,65
+spoonAddFrontLeftFar spoonAddFrontLeftFar87,88
+spoonAddFrontLeftFar spoonAddFrontLeftFar88,89
+personSubhouse personSubhouse100,101
+personSubhouse personSubhouse101,102
+rotateSpoonWithB rotateSpoonWithB108,109
+rotateSpoonWithB rotateSpoonWithB109,110
+rotateCrisp rotateCrisp122,123
+rotateCrisp rotateCrisp123,124
+rotateCrisp2 rotateCrisp2132,133
+rotateCrisp2 rotateCrisp2133,134
+scaleFuzzyVector scaleFuzzyVector138,139
+scaleFuzzyVector scaleFuzzyVector139,140
+scaleFactor scaleFactor155,156
+refSpace refSpace161,162
+--gnuTree --gnuTree164,165
+intrinsicRefHouse intrinsicRefHouse166,167
+intrinsicRefHouse intrinsicRefHouse167,168
+rotnorth rotnorth178,179
+figa figa180,181
+figa1 figa1182,183
+pngfiga pngfiga184,185
+satfiga=satfiga186,187
+figb figb189,190
+rottree rottree191,192
+rotsimon rotsimon192,193
+rothouse rothouse193,194
+rothouseFront rothouseFront194,195
+fuzzyAngle fuzzyAngle196,197
+pngfigb pngfigb198,199
+satfigb=satfigb200,201
+transformedTree transformedTree205,206
+pngfigc pngfigc216,217
+satfigc=satfigc218,219
+figd figd222,223
+pngfigd=pngfigd227,228
+satfigd=satfigd229,230
+fige fige233,234
+pngfige pngfige235,236
+satfige=satfige237,238
+figf=figf241,242
+pngfigf pngfigf245,246
+satfigf=satfigf247,248
+interReferenceFrame interReferenceFrame254,255
+interactiveFuzzyVectors interactiveFuzzyVectors257,258
+exportAllFuzzyVectors=exportAllFuzzyVectors261,262
+
+./src/Discretization.hs,1389
+module Discretization Discretization12,13
+data DiscreteSpace DiscreteSpace31,32
+data DiscreteSpace =S S31,32
+data DiscreteSpace =S {minX:minX31,32
+                     , minY:minY32,33
+                     , maxX:maxX33,34
+                     , maxY:maxY34,35
+                     , stepsize:stepsize35,36
+createVectorDomain createVectorDomain41,42
+createVectorDomain createVectorDomain43,44
+createVectorsForBinaryOps' createVectorsForBinaryOps'53,54
+createVectorsForBinaryOps' createVectorsForBinaryOps'55,56
+createVectorsForBinaryOps createVectorsForBinaryOps68,69
+createVectorsForBinaryOps createVectorsForBinaryOps70,71
+fitToVectorDomain fitToVectorDomain120,121
+fitToVectorDomain fitToVectorDomain122,123
+fitEveryPosToP5Space fitEveryPosToP5Space125,126
+fitEveryPosToP5Space fitEveryPosToP5Space128,129
+toPoint5Raster toPoint5Raster131,132
+toPoint5Raster toPoint5Raster134,135
+roundtoFractionalDigits roundtoFractionalDigits142,143
+roundtoFractionalDigits roundtoFractionalDigits145,146
+createScaleDomain createScaleDomain151,152
+createScaleDomain createScaleDomain152,153
+fitToScaleDomain fitToScaleDomain156,157
+fitToScaleDomain fitToScaleDomain158,159
+createAngleDomain createAngleDomain164,165
+createAngleDomain createAngleDomain166,167
+fitToAngleDomain fitToAngleDomain170,171
+fitToAngleDomain fitToAngleDomain172,173
 
 ./Setup.hs,15
 main main1,2
