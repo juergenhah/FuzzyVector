@@ -120,13 +120,13 @@ createVectorsForBinaryOps space  = runEval $
 -- this implementation fits to 0.5 values only
 fitToVectorDomain :: CrispVector -- ^ general crisp vector
                        -> CrispVector -- ^ crisp vector round to the vector domain
-fitToVectorDomain = fitEveryPosToP5Space 1
+fitToVectorDomain = fitEveryPosToP5Space 0
 
 -- | fits ever crisp vector to a 0.5 raster
 fitEveryPosToP5Space :: Int         -- ^ accuracy, how many positions after comma
                      -> CrispVector -- ^ vector to round
                      -> CrispVector -- ^ rounded vector
-fitEveryPosToP5Space accuracy v = V.map (toPoint5Raster accuracy )  v
+fitEveryPosToP5Space accuracy (C v) = C (V.map (toPoint5Raster accuracy )  v) 
 
 -- | rounds a value to a 0.5 raster [0.0,0.5,1.0,...]
 toPoint5Raster :: Int    -- ^ accuracy
@@ -156,7 +156,7 @@ createScaleDomain = map (roundtoFractionalDigits 2) [0.0,0.1..10]
 -- rounds to 2 decimal positions
 fitToScaleDomain :: Double -- ^ value to round
                  -> Double -- ^ rounded value
-fitToScaleDomain = roundtoFractionalDigits 2
+fitToScaleDomain = roundtoFractionalDigits 1
 
 
 -- * functions for angle domain

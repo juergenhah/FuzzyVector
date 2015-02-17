@@ -15,7 +15,7 @@ module GnuplotExport ( makeInteractiveMesh
                      , exportFuzzyVectorstoPng
                      , showFuzzyVectors) where
 
-import qualified Data.Vector.Storable as V
+
 import           Data.List.Split
 import           Data.List
 import qualified Graphics.Gnuplot.Advanced as GP
@@ -28,6 +28,7 @@ import qualified Graphics.Gnuplot.Plot.ThreeDimensional as Plot3D
 import qualified Graphics.Gnuplot.Terminal.X11 as X11
 import qualified Graphics.Gnuplot.Terminal.PNG as Png
 
+import           CrispVector
 import           Discretization
 import           FuzzyVector
 
@@ -72,7 +73,7 @@ makePngMap space filename mu = GP.plot (Png.transparent $ Png.cons (filename++ "
 createMeshData :: DiscreteSpace              -- ^ space to work on
                -> FuzzyVector                -- ^ fuzzy vector to create data
                -> [[(Double,Double,Double)]] -- ^ (X,Y, membershipvalue) of the fuzzy vector
-createMeshData space mu = map (map (\v -> (V.head v, (V.head . V.drop 1) v,mu v))) chuncks
+createMeshData space mu = map (map (\v -> (getX v, getY v, mu v))) chuncks
  where len =round( 1+(maxX space-minX space)*(1/stepsize space))
        chuncks = chunksOf len $ createVectorDomain space
 

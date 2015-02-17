@@ -1,3 +1,4 @@
+
 {-# LANGUAGE BangPatterns #-}
 {-|
 Module      : FuzzyVector
@@ -25,6 +26,7 @@ module FuzzyVector ( MemberShipValue
                    , crispScale
                    , fuzzyCentroidScale
                    , calculateFuzzyAngle
+                   , calculateFuzzyAngle'
                    , fuzzyAngleofFuzzyVector
                    , calcCentroidAngle
                    , fuzzyRotation
@@ -33,7 +35,7 @@ module FuzzyVector ( MemberShipValue
                    , translateToCenterWithCentroid
                    , crispTranslate
                    , maximum'
-                   , fuzzyComplement
+                   , debugCreateFuzzyScaleFactor 
                    ) where
 
 import           Data.List
@@ -64,7 +66,7 @@ fuzzyThresholdTest :: D.DiscreteSpace -- ^ space to work on
                    -> Double          -- ^ threshold value to be tested
                    -> Bool            -- ^ is any fuzzy membership value higher than the threshold value
 fuzzyThresholdTest space muA n = n <= maximum discreteField
- where discreteField = map (muA) $ D.createVectorDomain space
+ where discreteField = map (muA) $! D.createVectorDomain space
 
 
 -- * fuzzy Scaling
@@ -84,22 +86,38 @@ calculateFuzzyScaleFactor' :: D.DiscreteSpace                  -- ^ space to wor
                            -> [(ScaleFactor, MemberShipValue)] -- ^ lookup list
 calculateFuzzyScaleFactor' space muA muB = map 
  (\lambda -> (lambda, createFuzzyScaleFactor space muA muB lambda))  
- $ D.createAngleDomain space
+ $! D.createScaleDomain
 
 -- | lookup function
 lookupScale :: [(ScaleFactor, MemberShipValue)] -- ^ lookup list
             -> FuzzyScaleFactor                 -- ^ fuzzy membership value for a searched scale factor
-lookupScale lookupList fuzzyFactor  = fromMaybe (0.0) $! lookup fuzzyFactor lookupList
+lookupScale !lookupList fuzzyFactor  = fromMaybe (0.0) $! lookup fuzzyFactor lookupList
 
 -- | scales the second fuzzy vector to meet the first fuzzy vector
 createFuzzyScaleFactor :: D.DiscreteSpace  -- ^ space to work on
                        -> FuzzyVector      -- ^ fuzzy vector to meet
                        -> FuzzyVector      -- ^ fuzzy vector to scale
                        -> FuzzyScaleFactor -- ^ fuzzy value that shows how well the second fuzzy vector meets the first one
-createFuzzyScaleFactor space !muA !muB lambda =D.fitToScaleDomain.  mean . map 
+createFuzzyScaleFactor space !muA !muB lambda = mean . map  
  (\vi -> min (muA vi) 
              (muB (D.fitToVectorDomain (C.scaleCrispVector lambda vi))) --D.trimtoDiscreteRaster 1
- ) . filter (/= C.crispVector 0.0 0.0) $ D.createVectorDomain space
+ ) . filter (/= C.crispVector 0.0 0.0) $! D.createVectorDomain space
+
+debugCreateFuzzyScaleFactor  :: D.DiscreteSpace  -- ^ space to work on
+                             -> FuzzyVector      -- ^ fuzzy vector to meet
+                             -> FuzzyVector      -- ^ fuzzy vector to scale
+                             -> ScaleFactor
+                             -> [(C.CrispVector,ScaleFactor,MemberShipValue,C.CrispVector,MemberShipValue,MemberShipValue)]  -- ^ fuzzy value that shows how well the second fuzzy vector meets the first one
+debugCreateFuzzyScaleFactor space !muA !muB lambda =  map  
+   (\vi -> ( vi
+            ,lambda
+            ,muA vi
+            , D.fitToVectorDomain (C.scaleCrispVector lambda vi)
+            ,muB (D.fitToVectorDomain (C.scaleCrispVector lambda vi))
+            ,min (muA vi) 
+                 (muB (D.fitToVectorDomain (C.scaleCrispVector lambda vi))) 
+            )  --D.trimtoDiscreteRaster 1
+  ) . filter (/= C.crispVector 0.0 0.0) $! D.createVectorDomain space
 
 -- | calculates the mean value of a list of values
 mean :: Floating a => [a] -- ^ list of values
@@ -114,13 +132,13 @@ fuzzyScale :: FuzzyVector      -- ^ fuzzy vector to scale
 fuzzyScale !muA !muLambda v= maximum' . map 
  (\lambda-> min (muA (D.fitToVectorDomain (C.scaleCrispVector (1/lambda) v))) 
                 (muLambda lambda)
- ) .filter (/= 0.0) $ D.createScaleDomain 
+ ) .filter (/= 0.0) $! D.createScaleDomain 
 
 -- | scales a fuzzy vector with a fixed scale factor
 crispScale :: FuzzyVector -- ^ fuzzy vector to be scaled
            -> ScaleFactor -- ^ fixed scale factor
            -> FuzzyVector -- ^ scaled fuzzy vector
-crispScale  mu scaleFactor v = mu. D.fitToVectorDomain $ C.scaleCrispVector (1/scaleFactor) v
+crispScale  mu scaleFactor v = mu. D.fitToVectorDomain $! C.scaleCrispVector (1/scaleFactor) v
 
 -- | scales a fuzzy vector with the calculated centroid of a fuzzy scale factor
 fuzzyCentroidScale :: D.DiscreteSpace  -- ^ space to work on
@@ -135,7 +153,7 @@ calcCentroidFuzzyScaleFactor :: D.DiscreteSpace  -- ^ space to work on
                              -> FuzzyScaleFactor -- ^ fuzzy scale factor where centroid is calculated
                              -> ScaleFactor      -- ^ fixed scale factor, centroid of the fuzzy scale factor
 calcCentroidFuzzyScaleFactor space mu  =  (/m) . sum . map (\l-> (mu l)*l) 
-                                                $ D.createScaleDomain
+                                                $! D.createScaleDomain
  where m = sum. map mu $ D.createScaleDomain                  
 
 
@@ -161,7 +179,7 @@ debugFuzzyScale muA muLambda v= map (\lambda->
  , min (muA (D.fitToVectorDomain (C.scaleCrispVector (1/lambda) v))) 
        (muLambda lambda) 
  )
-                                    ) . filter (/= 0.0) $ D.createScaleDomain
+                                    ) . filter (/= 0.0) $! D.createScaleDomain
 
 -- * rotate functions
 
@@ -181,7 +199,7 @@ calculateFuzzyAngle space muA muB angle = maximum' .
 calculateFuzzyAngle' :: D.DiscreteSpace              -- ^ space to work on
                      -> FuzzyVector                  -- ^ fuzzy vector to be measured
                      -> [(C.Angle ,MemberShipValue)] -- ^ lookup list
-calculateFuzzyAngle' space muA  = Map.toList . Map.fromListWith (max) $ 
+calculateFuzzyAngle' space muA  = Map.toList . Map.fromListWith (max) $! 
  map (\v -> (D.fitToAngleDomain (C.calcAngleFromYAxisClockwise v), muA v)) 
  $! D.createVectorDomain space
 
@@ -205,7 +223,7 @@ fuzzyRotation :: D.DiscreteSpace -- ^ space to work on
               -> FuzzyVector     -- ^ rotated fuzzy vector
 fuzzyRotation space muA fuzzyAngle v= maximum' . map 
  (\alpha -> min ((fuzzyAngle alpha )) 
-                (muA (D.fitToVectorDomain (C.rotateCounterClockwise alpha v))) --D.trimtoDiscreteRaster 0
+                (muA (D.fitToVectorDomain (C.rotateClockwise alpha v))) --D.trimtoDiscreteRaster 0
  )  $! D.createAngleDomain space
 
 
@@ -227,8 +245,8 @@ fuzzyCentroidRotation space muA fuzzyAngle v= crispRotation muA centroidAngle v
 calcCentroidAngle :: D.DiscreteSpace -- ^ space to work on
                   -> FuzzyAngle      -- ^ fuzzy angle
                   -> C.Angle         -- ^ centroid angle from the fuzzy angle
-calcCentroidAngle space muangle = (/m). sum.map (\l-> (muangle l)*l) $ D.createAngleDomain space 
- where m =  sum.map muangle $ D.createAngleDomain space   
+calcCentroidAngle space muangle = (/m). sum.map (\l-> (muangle l)*l) $! D.createAngleDomain space 
+ where m =  sum.map muangle $! D.createAngleDomain space   
 
 -- | debug function
 debugFuzzyRotation :: D.DiscreteSpace -- ^  
@@ -253,27 +271,20 @@ translateToCenterWithCentroid :: D.DiscreteSpace -- ^ space to work on
                               -> FuzzyVector     -- ^ fuzzy vector to translate 
                               -> FuzzyVector     -- ^ centered fuzzy vector
 translateToCenterWithCentroid space muA v =  crispTranslate muA centroid v
- where centroid = D.fitToVectorDomain $ calcCentroid space muA 
+ where centroid = D.fitToVectorDomain $! calcCentroid space muA 
 
 -- | translate a fuzzy vector with a fixed vector
 crispTranslate :: FuzzyVector   -- ^ fuzzy vector
                -> C.CrispVector -- ^ fixed vector
                -> FuzzyVector   -- ^ translated vector
 crispTranslate muA trans  v= muA (v') 
-  where v'=v+trans
+  where v'=C.add v trans
 
 -- | calculates the centroid of a fuzzy vector
 calcCentroid :: D.DiscreteSpace -- ^ space to work on
              -> FuzzyVector     -- ^ fuzzy vector
              -> C.CrispVector   -- ^ centroid of the fuzzy vector
 calcCentroid space muA = D.fitToVectorDomain. C.scaleCrispVector (1/m) . C.sumVec . map
- (\v -> C.scaleCrispVector (muA v) v) $ D.createVectorDomain space
- where m =sum . map (muA) $ D.createVectorDomain space             
+ (\v -> C.scaleCrispVector (muA v) v) $! D.createVectorDomain space
+ where m =sum . map (muA) $! D.createVectorDomain space             
 
--- | calculates the complement of one fuzzy vector against the second one
-fuzzyComplement :: FuzzyVector -- ^ first fuzzy vector
-                -> FuzzyVector -- ^ second fuzzy vector
-                -> FuzzyVector -- ^ complemented vector
-fuzzyComplement muA muB v
- | (muA v - muB v) <0.0 = 0.0
- | otherwise = muA v - muB v

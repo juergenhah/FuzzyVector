@@ -15,7 +15,7 @@ module Main where
 import           Control.Parallel.Strategies
 import           Control.DeepSeq
 import           Data.List
-
+import  Control.Monad.Trans
 import           BinaryFuzzyOperation
 import           Discretization
 import           FuzzyExamples
@@ -26,25 +26,27 @@ import           ReferenceFrameTransformations
 import           ShowFuzzyVector
 import           SpatialTemplates
 
+import qualified CrispVector as C
+
+
 
 -- * Figures for Paper
 -- compile using:  ghc -O2 Main.hs -rtsopts -threaded -H128m
 -- run using: ./Main a.txt +RTS -N -s
 
 -- | space definition for discretization
-discreteSpace = S {minX = (-10.0)
-                  ,minY = (-10.0)
-                  ,maxX = 10.0 
-                  ,maxY = 10.0 
+discreteSpace = S {minX = (-20.0)
+                  ,minY = (-20.0)
+                  ,maxX = 20.0 
+                  ,maxY = 20.0 
                   ,stepsize = 1
                   }   
 
 -- | calls functions to produce figures for the COSIT paper
 main:: IO ()
-main =do
- putStrLn "\n FIGURE C -----"
- pngfigc
- putStrLn $ show  satfigc
+main =do createFiguresForPaper 
+         print  "finished"
+
 
 
 -- ** figures to explain the fuzzy operations
@@ -65,22 +67,22 @@ calctransforms :: IO ()
 calctransforms = do
  putStrLn "FIGURE A --------"
  pngfiga
- putStrLn $ show  satfiga
+-- putStrLn $ show  satfiga
  putStrLn "\n FIGURE B -----"
  pngfigb
- putStrLn $ show  satfigb
+-- putStrLn $ show  satfigb
  putStrLn "\n FIGURE C -----"
  pngfigc
- putStrLn $ show  satfigc
+-- putStrLn $ show  satfigc
  putStrLn "\n FIGURE D -----"
- pngfigd
- putStrLn $ show  satfigd
+ figd
+-- putStrLn $ show  satfigd
  putStrLn "\n FIGURE E -----"
  pngfige
- putStrLn $ show  satfige 
+-- putStrLn $ show  satfige 
  putStrLn "\n FIGURE F -----"
- pngfigf
- putStrLn $ show satfigf
+ figf1
+-- putStrLn $ show satfigf
  print "DONE"
 
 
@@ -134,8 +136,9 @@ rotateCrisp2 :: IO ()
 rotateCrisp2 = do
  let rotated = crispRotation  fuzzySpoon (45.0) 
  sequence_ [GnuPlot.makePngMap discreteSpace "fuzzy spoon rotated by crisp angle 45.0" rotated]
+ 
 -- ** FIGURE in paper scaling
--- zentriertes template verdoppeln
+
 scaleFuzzyVector :: IO ()
 scaleFuzzyVector = do
  let sf = calculateFuzzyScaleFactor discreteSpace centerobjA1 bigfuzzyGroundTemplate 
@@ -159,10 +162,7 @@ scaleFactor = convertScaleFactor4tikz $! calculateFuzzyScaleFactor' discreteSpac
 
 -- * FIGURE in paper transformation
 -- fuzzy vectors for reference frames:
-refSpace =  S {minX= (-10.0) ,minY= (-10.0)  ,maxX =20.0 ,maxY=20.0 ,stepsize=1}   
- 
-
---gnuTree = 
+refSpace =  discreteSpace
 
 intrinsicRefHouse :: DiscreteSpace ->IO ()
 intrinsicRefHouse space= do
@@ -178,56 +178,82 @@ intrinsicRefHouse space= do
 -- ** figure (a) from paper
 rotnorth = crispRotation north (-30.0) 
 
-figa = fuzzyUnion rotnorth $ fuzzyUnion simon $ fuzzyUnion tree $ fuzzyUnion largehouse largehouseFront
+figa = fuzzyUnion north $ fuzzyUnion simon $ fuzzyUnion tree $ fuzzyUnion largehouse largehouseFront
 
 figa1 =1 -- scaleAasBtoC 
 
 pngfiga = GnuPlot.makePngMap refSpace "figure_a" figa
+inta = GnuPlot.makeInteractiveMesh refSpace figa
 
 satfiga= satisfies refSpace figa namedSpatialTemplates  0.8    
 
 -- ** figure (b) from paper
-figb = fuzzyUnion rotsimon $ fuzzyUnion rottree $ fuzzyUnion rothouse rothouseFront
+fuzzyAngle = fuzzyAngleofFuzzyVector refSpace north 
+
+ta = filter ((/=0.0).snd) $ calculateFuzzyAngle' refSpace north
+
 
 rottree = fuzzyRotation refSpace tree  fuzzyAngle
 rotsimon = simon -- crispTranslate rot (V.fromList [8.0,-8.0])
 rothouse = fuzzyRotation refSpace largehouse  fuzzyAngle
 rothouseFront =fuzzyRotation refSpace largehouseFront  fuzzyAngle
 
-fuzzyAngle = fuzzyAngleofFuzzyVector refSpace north 
+figb = fuzzyUnion rotsimon $ fuzzyUnion rottree $ fuzzyUnion rothouse rothouseFront
 
 pngfigb =  GnuPlot.makePngMap refSpace "figure_b" figb
+intb = GnuPlot.makeInteractiveMesh refSpace figb
+inttree = GnuPlot.makeInteractiveMesh refSpace rottree
+intthouse = GnuPlot.makeInteractiveMesh refSpace rothouse
+intthouseFront = GnuPlot.makeInteractiveMesh refSpace rothouseFront
+innt =  GnuPlot.makeInteractiveMesh refSpace $ fuzzyUnion largehouseFront largehouse
+inttree1 = GnuPlot.makeInteractiveMesh refSpace tree
 
 satfigb= satisfies refSpace (rottree) namedSpatialTemplates   0.8    
 
 -- ground template muss nicht angepasse werden
 
 -- ** figure (c) from paper
-transformedTree = do
-                 sol <- runEval $! do
-                  angle <- rpar (force (fuzzyAngleofFuzzyVector refSpace north )) 
-                  subtraction <-rpar (force (fuzzySub refSpace tree largehouse ))
-                  rseq angle
-                  rseq subtraction
-                  o <- rpar (force (fuzzyRotation refSpace subtraction angle)) 
-                  rseq o
-                  return $! o
-                 return sol
-                  
-pngfigc = GnuPlot.makePngMap refSpace "figure_c" transformedTree
+
+pngfigc :: IO ()
+pngfigc = do
+ let angle = fuzzyAngleofFuzzyVector discreteSpace north
+     figure = fuzzyRotation discreteSpace subtraction angle
+     subtraction = fuzzySub discreteSpace tree largehouse 
+ sequence_ [ GnuPlot.makePngMap discreteSpace "tree" tree
+           , GnuPlot.makePngMap discreteSpace "largehouse" largehouse
+           , GnuPlot.makePngMap discreteSpace "fig_c" figure]
+
 
 satfigc= satisfies refSpace transformedTree scalednamedRefFrames  0.8    
  where scalednamedRefFrames = map (\ (name,nframe)  ->(name, scaleAasBtoC refSpace nframe fuzzyGroundTemplate largehouse  )) namedSpatialTemplates
+       angle = fuzzyAngleofFuzzyVector discreteSpace north
+       transformedTree = fuzzyRotation discreteSpace subtraction angle
+       subtraction = fuzzySub discreteSpace tree largehouse 
 
 -- ** figure (d) from paper
-figd =fuzzyRotation refSpace (fuzzySub refSpace tree largehouse  )  fuzzyAngleFront   
+figd = do
+ let  frontdirection = fuzzySub refSpace largehouseFront largehouse
+      angle = fuzzyAngleofFuzzyVector refSpace frontdirection 
+      subtraction = fuzzySub refSpace tree largehouse 
+      figure = fuzzyRotation refSpace subtraction  angle   
+ sequence_ [GnuPlot.makePngMap discreteSpace "tree" tree
+                 , GnuPlot.makePngMap discreteSpace "frontdirectin" frontdirection
+                 , GnuPlot.makePngMap discreteSpace "subtraction" subtraction
+                 , GnuPlot.makePngMap discreteSpace "largehouse" largehouse
+                 , GnuPlot.makePngMap discreteSpace "largehouseFront" largehouseFront
+                 , GnuPlot.makePngMap discreteSpace "fig_d" figure
+                 ]
+
+tbnn = GnuPlot.makeInteractiveMesh discreteSpace $ fuzzySub refSpace largehouseFront largehouse
+
+tnm=  fuzzyRotation refSpace (fuzzySub refSpace tree largehouse  )  fuzzyAngleFront   
  where fuzzyFront = fuzzySub refSpace largehouseFront house 
        fuzzyAngleFront = fuzzyAngleofFuzzyVector refSpace fuzzyFront 
 
+tbn = fitToVectorDomain $ C.crispVector 0.3 0.8
+pngfigd= GnuPlot.makePngMap refSpace "figure_d" tnm
 
-pngfigd= GnuPlot.makePngMap refSpace "figure_d" figd
-
-satfigd= satisfies refSpace figd scalednamedRefFrames  0.8    
+satfigd= satisfies refSpace tnm scalednamedRefFrames  0.8    
  where scalednamedRefFrames = map (\ (name,nframe)  ->(name, scaleAasBtoC refSpace nframe fuzzyGroundTemplate largehouse  )) namedSpatialTemplates 
 
 -- ** figure (e) from paper
@@ -239,6 +265,18 @@ satfige= satisfies refSpace fige scalednamedRefFrames  0.8
  where scalednamedRefFrames = map (\ (name,nframe)  ->(name, scaleAasBtoC refSpace nframe fuzzyGroundTemplate largehouse  )) namedSpatialTemplates 
 
 -- ** figure (f) from paper
+
+figf1 = do 
+        let angle = fuzzyAngleofFuzzyVector refSpace frontdirection 
+            frontdirection = fuzzySub refSpace simon largehouse
+            subtraction = fuzzySub refSpace tree largehouse 
+            figure = fuzzyRotation refSpace subtraction  angle   
+        sequence_ [GnuPlot.makePngMap discreteSpace "tree" tree
+                            , GnuPlot.makePngMap discreteSpace "largehouse" largehouse
+                            , GnuPlot.makePngMap discreteSpace "largehouseFront" largehouseFront
+                            , GnuPlot.makePngMap discreteSpace "fig_f" figure
+                            ]
+
 figf=fuzzyRotation refSpace(fuzzySub refSpace tree largehouse  )  fuzzyAngleObserver
   where fuzzyOrientationObserver = fuzzySub refSpace simon house 
         fuzzyAngleObserver = fuzzyAngleofFuzzyVector refSpace fuzzyOrientationObserver 
@@ -258,7 +296,7 @@ interReferenceFrame =GnuPlot.showFuzzyVectors discreteSpace  allSpatialTemplates
 interactiveFuzzyVectors = GnuPlot.showFuzzyVectors discreteSpace fuzzyVectors
  where fuzzyVectors = [fuzzySpoon,fuzzyFork]
 
-
+intSPatTemplate = GnuPlot.showFuzzyVectors discreteSpace allSpatialTemplates
 exportAllFuzzyVectors= GnuPlot.exportFuzzyVectorstoPng discreteSpace names fuzzyVectors
  where names = ["Spoon","Fork","NearRight","SpoonUnionFork"]
        fuzzyVectors = [fuzzySpoon,fuzzyFork,fuzzyBackRight,fuzzySpoonUnionFork]

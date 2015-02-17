@@ -24,7 +24,7 @@ fuzzyGroundTemplate = fuzzyCircleTemplate 3 0 (crispVector 0.0 0.0)
 
 bigfuzzyGroundTemplate :: CrispVector
                        -> MemberShipValue
-bigfuzzyGroundTemplate = fuzzyCircleTemplate 5 0 (crispVector 0.0 0.0)
+bigfuzzyGroundTemplate = fuzzyCircleTemplate 4 3 (crispVector 0.0 0.0)
 
 -- * fuzzy spatial templates
 allSpatialTemplates = [fuzzyHere,fuzzyNear,fuzzyFar,fuzzyVeryFar,fuzzyFront,fuzzyBack,fuzzyRight,fuzzyLeft,

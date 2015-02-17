@@ -12,7 +12,6 @@ Portability :
 module ShowFuzzyVector ( showDistribution
                        , discretizeFuzzyVector) where
 
-import qualified Data.Vector.Storable as V
 import           Data.List
 import           Data.List.Split
 import           Text.Printf
