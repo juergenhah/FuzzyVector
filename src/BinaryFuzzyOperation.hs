@@ -17,15 +17,18 @@ module BinaryFuzzyOperation ( fuzzyIntersection
                             , fuzzySub
                             , center
                             , scaleAasBtoC
+                            , fuzzyComplement
+                            , binaryLookupTable
                             ) where
 
-import           Control.DeepSeq
-import           Control.Parallel.Strategies
-import           Data.List
+import Control.DeepSeq
+import Control.Parallel.Strategies
+import Data.List
+import Data.Maybe
 
-import           CrispVector
-import           Discretization
-import           FuzzyVector
+import CrispVector
+import Discretization
+import FuzzyVector
 
 -- | general type of a binary function on two crisp vectors
 type BinaryVectorOperation = CrispVector -> CrispVector -> CrispVector
@@ -42,13 +45,21 @@ fuzzyUnion :: FuzzyVector -- ^ first fuzzy vector for union
            -> FuzzyVector -- ^ resulting fuzzy vector of the union
 fuzzyUnion muA muB v = max (muA v) (muB v)
 
+-- | calculates the complement of one fuzzy vector against the second one
+fuzzyComplement :: FuzzyVector -- ^ first fuzzy vector
+                -> FuzzyVector -- ^ second fuzzy vector
+                -> FuzzyVector -- ^ complemented vector
+fuzzyComplement muA muB v
+ | (muA v - muB v) <0.0 = 0.0
+ | otherwise = muA v - muB v
+
 -- | general binary fuzzy operation
 binaryFuzzyOperation :: DiscreteSpace           -- ^ discrete space to work on
                       -> FuzzyVector            -- ^ first fuzzy vector       
                       -> FuzzyVector            -- ^ second fuzzy vector
                       -> BinaryVectorOperation  -- ^ function that operates on two crisp vectors
                       -> FuzzyVector            -- ^ resulting fuzzy vector
-binaryFuzzyOperation space muA muB operation x = maximum'. map (\(xi,xj) -> min (muA xi) (muB xj)) $! matchingVectors
+binaryFuzzyOperation !space !muA !muB operation x = maximum'. map (\(xi,xj) -> min (muA xi) (muB xj)) $! matchingVectors
  where matchingVectors = filter (\(xi,xj) -> ( xi `operation` xj) ==x) $! createVectorsForBinaryOps  space
 
 -- | performant implementation for a binary fuzzy operation
@@ -57,8 +68,16 @@ binaryFuzzyOperation' :: DiscreteSpace         -- ^ discrete space to work on
                       -> FuzzyVector           -- ^ second fuzzy vector
                       -> BinaryVectorOperation -- ^ function that operates on two crisp vectors
                       -> FuzzyVector           -- ^ resulting fuzzy vector
-binaryFuzzyOperation' space muA muB operation x = maximum' matchingVectors
+binaryFuzzyOperation' !space !muA !muB !operation !x = maximum' matchingVectors
   where matchingVectors =runEval $! evalSpaceParallel space muA muB operation x
+
+binaryLookupTable ::  DiscreteSpace         -- ^ discrete space to work on
+                  -> FuzzyVector           -- ^ first fuzzy vector
+                  -> FuzzyVector           -- ^ second fuzzy vector
+                  -> BinaryVectorOperation -- ^ function that operates on two
+                  -> [(CrispVector,MemberShipValue)]
+binaryLookupTable !space !muA !muB !operation = map (\v-> (v, binaryFuzzyOperation' space muA muB operation v)) $ createVectorDomain space
+
 
 -- | performs an binary fuzzy operation in parallel
 -- the discrete space is split in four parts accordin to coordinate system quadrants
@@ -68,7 +87,7 @@ evalSpaceParallel :: DiscreteSpace          -- ^ discrete space to work on
                   -> BinaryVectorOperation  -- ^ function that operates on two crisp vectors
                   -> CrispVector            -- ^ actual vector for this calculation 
                   -> Eval [MemberShipValue] -- ^ membership value for the actual crisp value
-evalSpaceParallel space muA muB  operation v= do
+evalSpaceParallel !space muA muB operation v= do
  let step = stepsize space
      miX = minX space
      miY = minY space
@@ -124,14 +143,16 @@ fuzzyAdd :: DiscreteSpace -- ^ discrete space to work on
          -> FuzzyVector   -- ^ first fuzzy vector 
          -> FuzzyVector   -- ^ second fuzzy vector
          -> FuzzyVector   -- ^ added fuzzy vector 
-fuzzyAdd space muA muB  v = binaryFuzzyOperation' space muA muB  (+) v
+fuzzyAdd space muA muB  v = fromMaybe (0.0) $! lookup v lookUpList
+ where lookUpList = binaryLookupTable space muA muB (add)
 
 -- | calculates the membership value of the summed  fuzzy vectors for one crisp input vector v
 fuzzySub :: DiscreteSpace -- ^ discrete space to work on
          -> FuzzyVector   -- ^ first fuzzy vector 
          -> FuzzyVector   -- ^ second fuzzy vector 
          -> FuzzyVector   -- ^ subtracted fuzzy vector
-fuzzySub space muA muB  v= binaryFuzzyOperation' space muA muB  (-) v           
+fuzzySub space muA muB  v= fromMaybe (0.0) $! lookup v lookUpList
+  where lookUpList = binaryLookupTable space muA muB (sub)
 
 
 -- | translates a fuzzy vector to the origin of the discrete space
@@ -146,7 +167,7 @@ scaleAasBtoC :: DiscreteSpace -- ^ discrete space to work on
              -> FuzzyVector   -- ^ second fuzzy vector, used to calculate scale factor
              -> FuzzyVector   -- ^ fuzzy vector to scale
              -> FuzzyVector   -- ^ scaled fuzzy vector
-scaleAasBtoC space muB muC muA v = fuzzyCentroidScale space muA scalefactor  v 
+scaleAasBtoC !space muB muC muA v = fuzzyCentroidScale space muA scalefactor  v 
  where scalefactor = scaleAasBtoC' space muB muC muA v
 
 -- | performant implementation of scaleAasBtoC
@@ -164,14 +185,6 @@ scaleAasBtoC'  space muB muC muA v= do
    rseq centermuC
    scalefac <- rpar (force (createFuzzyScaleFactor space centermuB centermuC))
    rseq scalefac
-   return $! scalefac
+   return scalefac
   return sol
 
-{-
-fuzzyComplement :: FuzzyVector -- ^
-                -> FuzzyVector -- ^
-                -> FuzzyVector -- ^
-fuzzyComplement muA muB v
- | (muA v - muB v) <0.0 = 0
- | otherwise = muA v - muB v
--}
