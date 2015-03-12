@@ -10,15 +10,21 @@ Portability :
 
 -}
 module ShowFuzzyVector ( showDistribution
-                       , discretizeFuzzyVector) where
+                       , fuzzyVectorToFile
+                       , fromFileTofuzzyVector) where
 
 import           Data.List
 import           Data.List.Split
+import qualified Data.Map as Map
+import           Data.Maybe
+import           System.IO.Extra
+import           System.IO.Unsafe
 import           Text.Printf
 
+import           CrispVector
 import           Discretization
 import           FuzzyVector
-        
+
 type Distribution= [MemberShipValue]
 
 -- | prints a distribution on the command line 
@@ -38,10 +44,29 @@ printdiscreteMembership (dat,name,s) =  do
  putStrLn $ "row x length: " Prelude.++ (show len)
  mapM_ putStr. intercalate ["\n"] . map (map (printf "%+-.2f ") ) $ chuncks
 
+
+
+createData :: DiscreteSpace              -- ^ space to work on
+           -> FuzzyMap                -- ^ fuzzy vector to create data
+           -> [(CrispVector,Double)] -- ^ (X,Y, membershipvalue) of the fuzzy vector
+createData space mu = Map.toList mu
+
+fuzzyVectorToFile :: DiscreteSpace
+                  -> FuzzyMap
+                  -> FilePath
+                  -> IO ()
+fuzzyVectorToFile space mu name = writeFile (name++ ".txt")  (show (dat))
+ where dat = createData space mu
+
+fromFileTofuzzyVector :: FilePath
+                      -> FuzzyMap
+fromFileTofuzzyVector name = Map.fromList list
+ where list  = (read) .unsafePerformIO .readFile' $ (name++ ".txt")                      
+
+{-
 -- | calculates for a space the membership values for the given fuzzy vector
 discretizeFuzzyVector :: DiscreteSpace -- ^ discrete space 
                       -> FuzzyVector  -- ^ fuzzy vector
                       -> Distribution -- ^ list with membership values for the discrete space
 discretizeFuzzyVector space mu  = map mu . createVectorDomain $ space
-
-
+-}

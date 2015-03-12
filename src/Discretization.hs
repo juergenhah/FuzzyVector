@@ -33,7 +33,7 @@ data DiscreteSpace =S {minX:: Double
                      , minY:: Double
                      , maxX:: Double
                      , maxY:: Double
-                     , stepsize::Double}
+                     , stepsize::Double} deriving (Show, Read)
 
 -- * function for the discrete vector  domain
 

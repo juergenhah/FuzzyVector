@@ -21,7 +21,7 @@ import           FuzzyVector
 -- * One dimensional fuzzy templates
 
 -- | One dimensional trapez fuzzy value
--- definition taken from page 16 from the book of Prof. Viertel
+-- definition taken from page 16 from the book "Beschreibung und Analyse unscharfer Information"
 trapez :: Double          -- ^ m
        -> Double          -- ^ s 
        -> Double          -- ^ l 
