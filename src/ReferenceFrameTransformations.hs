@@ -8,7 +8,6 @@ License     : GPL-3
 Maintainer  : hahn@geoinfo.tuwien.ac.at
 Stability   : experimental
 Portability : 
-
 -}
 module ReferenceFrameTransformations where
 
@@ -39,5 +38,4 @@ satisfies :: DiscreteSpace            -- ^ space to work on
           -> [(String, FuzzyMap)]  -- ^ (fuzzy spatial template name, fuzzy spatial template) list
           -> Double                   -- ^ threshold value
           -> [(String,Bool)]          -- ^ (fuzzy spatial template name, True for threshold value is lowe, False for threshold value not reached from fuzzy vector)
-satisfies space oj fis n = map (\fi-> (fst fi, fuzzyThresholdTest space (fuzzyIntersection oj (snd fi) ) n)) fis          
-
+satisfies space oj fis n = map (\fi-> (fst fi, fuzzyThresholdTest space (fuzzyIntersection oj (snd fi) ) n)) fis    
