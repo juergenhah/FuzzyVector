@@ -1,5 +1,3 @@
-
-{-# LANGUAGE BangPatterns #-}
 {-|
 Module      : GnuplotExport
 Description : creates GnuPlot diagrams of a fuzzy vector
@@ -45,7 +43,7 @@ testGnuPlot :: DiscreteSpace -> FuzzyMap-> IO ()
 testGnuPlot space mu= 
   putStr $ fst $ GP.fileContents "test" Term.cons  $  Frame.cons options $ 
   Plot3D.mesh $ createMeshData space mu                    
- where !options =  (
+ where options =  (
                     Opts.add (Opt.custom "xzeroaxis" "") ["lw","4","lt","1","lc","rgb","'white'"]  $ 
                     Opts.add (Opt.custom "yzeroaxis" "") ["lw","4","lt","1","lc","rgb","'white'"]  $ 
                     Opts.add (Opt.custom "grid" "xtics ytics") ["ls","2","lw","1","lt","4","lc","rgb","'white'"] $  
@@ -62,7 +60,7 @@ makeInteractiveMesh :: DiscreteSpace -- ^ space to work on
 makeInteractiveMesh space mu = GP.plot X11.cons $
                                 Frame.cons options $ 
                                 Plot3D.mesh $ createMeshData space mu                    
- where !options =  (
+ where options =  (
                    Opts.add (Opt.custom "xzeroaxis" "") ["lw","4","lt","1","lc","rgb","'white'"]  $ 
                    Opts.add (Opt.custom "yzeroaxis" "") ["lw","4","lt","1","lc","rgb","'white'"]  $ 
                    Opts.add (Opt.custom "grid" "xtics ytics") ["ls","2","lw","1","lt","4","lc","rgb","'white'"] $  
@@ -89,7 +87,7 @@ makePngMesh space filename mu = GP.plot (Png.transparent $
                                          $ Frame.cons options 
                                          $  Plot3D.mesh $!
                                          createMeshData space mu                     
- where !options = (Opts.add (Opt.custom "xzeroaxis" "") ["lw","1.5","lt","1","lc","rgb","'white'"]  $ 
+ where options = (Opts.add (Opt.custom "xzeroaxis" "") ["lw","1.5","lt","1","lc","rgb","'white'"]  $ 
                    Opts.add (Opt.custom "yzeroaxis" "") ["lw","1.5","lt","1","lc","rgb","'white'"]  $ 
                    Opts.add (Opt.custom "grid" "xtics ytics") ["lw","1","lt","0","lc","rgb","'white'"] $  
                    Opts.view 47.0 23.0 1.0 1.0 $ Opts.grid True $
@@ -105,12 +103,10 @@ makePngMap space filename mu = GP.plot (Png.transparent $ --Png.fontGiant $
  Png.cons (filename++ ".png")) $
                                Frame.cons options $ 
                                Plot3D.mesh $! createMeshData space mu
- where  !options = (Opts.add (Opt.custom "xzeroaxis" "") ["lw","4","lt","1","lc","rgb","'white'"]  $       
+ where  options = (Opts.add (Opt.custom "xzeroaxis" "") ["lw","4","lt","1","lc","rgb","'white'"]  $       
                     Opts.add (Opt.custom "yzeroaxis" "") ["lw","4","lt","1","lc","rgb","'white'"]  $       
                     Opts.add (Opt.custom "grid" "xtics ytics") ["ls","13", "lw","2","lt","0","lc","rgb","'white'"] $   
-                    --Opts.add (Opt.custom "xlabel" "") ["\"X - axis\"","font","\"Verdana,20\""]  $       
-                    --Opts.add (Opt.custom "ylabel" "") ["\"Y - axis\"","font","\"Verdana,20\""]  $         
-                  --Opts.add (Opt.custom "cblabel" "") ["\"membership\"","offset 1,0","font","\"Verdana,20\""]  $
+        
                     Opts.add (Opt.custom "xtics" "") ["font", "\"Verdana,20\""]  $
                     Opts.add (Opt.custom "ytics" "") ["font", "\"Verdana,20\""]  $
                     Opts.add (Opt.custom "cbtics" "") ["font", "\"Verdana,20\""] $
@@ -122,8 +118,8 @@ createMeshData :: DiscreteSpace              -- ^ space to work on
                -> FuzzyMap                -- ^ fuzzy vector to create data
                -> [[(Double,Double,Double)]] -- ^ (X,Y, membershipvalue) of the fuzzy vector
 createMeshData space mu = chunksOf len. map (\(v,m) -> (getX v,getY v,m)). Map.toList $ mu
- where !len =round( 1+(maxX space-minX space)*(1/stepsize space))
-       !chuncks = chunksOf len $ createVectorDomain space
+ where len =round( 1+(maxX space-minX space)*(1/stepsize space))
+       chuncks = chunksOf len $ createVectorDomain space
 
 -- | export a list of fuzzy vectors as png files
 exportFuzzyVectorstoPng :: DiscreteSpace -- ^ space to work on
