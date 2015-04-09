@@ -1,7 +1,6 @@
-{-# LANGUAGE BangPatterns #-}
 {-|
 Module      : ReferenceFrameTransformations
-Description : functions to transform fuzzy vectors to a different spatial reference fram
+Description : functions to transform fuzzy vectors to a different spatial reference frame
 Copyright   : (c) Juergen Hahn, 2015
                   Simon Scheider, 2015
 License     : GPL-3
@@ -28,9 +27,9 @@ transform :: DiscreteSpace -- ^ space to work on
            -> FuzzyMap  -- ^ transformed vector
 transform space gtpl ogrd vortfrom vort2 ofig = scaleAasBtoC space ogrd gtpl s   
  where s = fuzzyRotation space objectCentered orientationAngle
-       !orientationAngle = fuzzyAngleofFuzzyVector space orientation
-       !orientation=  (fuzzySub space vort2 vortfrom ) 
-       !objectCentered = (fuzzySub space ofig ogrd )  
+       orientationAngle = fuzzyAngleofFuzzyVector space orientation
+       orientation=  (fuzzySub space vort2 vortfrom ) 
+       objectCentered = (fuzzySub space ofig ogrd )  
 
 -- | checks if a fuzzy vector is inside all fuzzy spatial templates
 satisfies :: DiscreteSpace            -- ^ space to work on
@@ -38,4 +37,4 @@ satisfies :: DiscreteSpace            -- ^ space to work on
           -> [(String, FuzzyMap)]  -- ^ (fuzzy spatial template name, fuzzy spatial template) list
           -> Double                   -- ^ threshold value
           -> [(String,Bool)]          -- ^ (fuzzy spatial template name, True for threshold value is lowe, False for threshold value not reached from fuzzy vector)
-satisfies space oj fis n = map (\fi-> (fst fi, fuzzyThresholdTest space (fuzzyIntersection oj (snd fi) ) n)) fis    
+satisfies space oj fis n = map (\fi-> (fst fi, fuzzyThresholdTest space (fuzzyIntersectionMap oj (snd fi) ) n)) fis    
