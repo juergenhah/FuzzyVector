@@ -16,6 +16,7 @@ import CrispVector
 import FuzzyTemplates
 import FuzzyVector
 import Discretization 
+
 -- * fuzzy ground templates
 
 fuzzyGroundTemplate :: CrispVector
@@ -47,7 +48,7 @@ fuzzyHereMap space = toFuzzyMap space fuzzyHere
 -- near
 fuzzyNear :: CrispVector 
           -> MemberShipValue
-fuzzyNear = fuzzyComplement' (fuzzyCircleTemplate 8 0 (crispVector 0.0 0.0))  fuzzyHere
+fuzzyNear = fuzzyComplement (fuzzyCircleTemplate 8 0 (crispVector 0.0 0.0))  fuzzyHere
 
 fuzzyNearMap space = toFuzzyMap space fuzzyNear 
 
@@ -55,13 +56,13 @@ fuzzyNearMap space = toFuzzyMap space fuzzyNear
 -- needed for the spoonAddFrontLeftFar example
 fuzzyFar :: CrispVector 
          -> MemberShipValue
-fuzzyFar = fuzzyComplement' (fuzzyCircleTemplate 12 0 (crispVector 0.0 0.0))  (fuzzyUnion' fuzzyNear fuzzyHere) 
+fuzzyFar = fuzzyComplement (fuzzyCircleTemplate 12 0 (crispVector 0.0 0.0))  (fuzzyUnion fuzzyNear fuzzyHere) 
 
 fuzzyFarMap space = toFuzzyMap space fuzzyFar 
 
 fuzzyVeryFar :: CrispVector
              -> MemberShipValue
-fuzzyVeryFar = fuzzyComplement' (fuzzyCircleTemplate 16 3 (crispVector 0.0 0.0))  (fuzzyUnion' fuzzyFar $ fuzzyUnion' fuzzyNear fuzzyHere)       
+fuzzyVeryFar = fuzzyComplement (fuzzyCircleTemplate 16 3 (crispVector 0.0 0.0))  (fuzzyUnion fuzzyFar $ fuzzyUnion fuzzyNear fuzzyHere)       
 
 fuzzyVeryFarMap space = toFuzzyMap space fuzzyVeryFar
 
@@ -91,24 +92,24 @@ fuzzyLeftMap space = toFuzzyMap space fuzzyLeft
 
 fuzzyFrontRight :: CrispVector
                 -> MemberShipValue
-fuzzyFrontRight = fuzzyIntersection'  fuzzyFront fuzzyRight
+fuzzyFrontRight = fuzzyIntersection  fuzzyFront fuzzyRight
 
 fuzzyFrontRightMap space = toFuzzyMap space fuzzyFrontRight
 
 -- needed for spoonAddFronLeftFar example
 fuzzyFrontLeft :: CrispVector
                -> MemberShipValue
-fuzzyFrontLeft = fuzzyIntersection' fuzzyFront fuzzyLeft
+fuzzyFrontLeft = fuzzyIntersection fuzzyFront fuzzyLeft
 
 fuzzyFrontLeftMap space= toFuzzyMap space fuzzyFrontLeft
 
 fuzzyBackRight :: CrispVector
                -> MemberShipValue
-fuzzyBackRight = fuzzyIntersection' fuzzyBack fuzzyRight               
+fuzzyBackRight = fuzzyIntersection fuzzyBack fuzzyRight               
 fuzzyBackRightMap space = toFuzzyMap space fuzzyBackRight               
 
 fuzzyBackLeft :: CrispVector
               -> MemberShipValue
-fuzzyBackLeft = fuzzyIntersection' fuzzyBack fuzzyLeft
+fuzzyBackLeft = fuzzyIntersection fuzzyBack fuzzyLeft
 
 fuzzyBackLeftMap space = toFuzzyMap space fuzzyBackLeft
