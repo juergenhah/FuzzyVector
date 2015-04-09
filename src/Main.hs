@@ -1,4 +1,3 @@
-{-# LANGUAGE BangPatterns #-}
 {-|
 Module      : Main
 Description : creates all figures that are included into the COSIT 2015 article
@@ -25,7 +24,6 @@ import           Discretization
 import           FuzzyExamples
 import           FuzzyVector
 import qualified GnuplotExport as GnuPlot
---import           LatexExport
 import           ReferenceFrameTransformations
 import           ShowFuzzyVector
 import           SpatialTemplates
@@ -33,8 +31,8 @@ import           SpatialTemplates
 import qualified CrispVector as C
 
 -- * Figures for Paper
--- compile using:  ghc -O2 Main.hs -rtsopts -threaded -H128m
--- run using: ./Main a.txt +RTS -N -s -h
+-- compile via: cabal install or  ghc -O2 Main.hs -rtsopts -threaded -H128m
+-- run via:./ReferenceFrame or  ./Main a.txt +RTS -N -s -h
 
 -- | space definition for discretization
 discreteSpace = S {minX = (-20.0)
@@ -83,7 +81,7 @@ spoonAddFrontLeftFar space = do
  createDirectoryIfMissing True filepath  
  let figure1=  fuzzyAdd space fuzzyRealSpoon int 
      figure11 = fuzzyAdd space fuzzyRealSpoon fuzzyFrontLeft 
-     int = (fuzzyIntersection fuzzyFrontLeft fuzzyFar )
+     int = (fuzzyIntersectionMap fuzzyFrontLeft fuzzyFar )
      fuzzyRealSpoon = fuzzyRealSpoonMap space
      fuzzyFrontLeft = fuzzyFrontLeftMap space
      fuzzyFar = fuzzyFarMap space
@@ -152,7 +150,7 @@ scaleFuzzyVector space = do
  fuzzyVectorToFile space (scaled) ("./"++ filepath++"/" ++"scaled_real_spoon")    
  sequence_ [GnuPlot.makePngMap space ("./"++ filepath++"/" ++"obj_A") objA
            ,GnuPlot.makePngMap space ("./"++ filepath++"/" ++"centered_ obj_A") centerobjA1
-           ,GnuPlot.makePngMap space  ("./"++ filepath++"/" ++ "bigfuzzyGroundTemplate_union_obj_A") $ fuzzyUnion objA bigfuzzyGroundTemplate
+           ,GnuPlot.makePngMap space  ("./"++ filepath++"/" ++ "bigfuzzyGroundTemplate_union_obj_A") $ fuzzyUnionMap objA bigfuzzyGroundTemplate
            ,GnuPlot.makePngMap space  ("./"++ filepath++"/" ++"bigfuzzyGroundTempalte") bigfuzzyGroundTemplate  
            ,GnuPlot.makePngMap space  ("./"++ filepath++"/" ++"fuzzy_real_spoon") fuzzyRealSpoon
            ,GnuPlot.makePngMap space  ("./"++ filepath++"/" ++"scaled_real_spoon") scaled    ]
@@ -193,7 +191,7 @@ calctransforms space = do
 
 
 -- | figure (a) from paper
-spatialConfiguration = fuzzyUnion observer $ fuzzyUnion tree $ fuzzyUnion largehouse realLargehouseFront
+spatialConfiguration = fuzzyUnionMap observer $ fuzzyUnionMap tree $ fuzzyUnionMap largehouse realLargehouseFront
  where realLargehouseFront = realLargehouseFrontMap space
        observer = observerMap space
        tree = treeMap space
@@ -205,10 +203,10 @@ iGnuPlotSpatialConfiguration = GnuPlot.makeInteractiveMesh discreteSpace spatial
 -- | figure (b) from paper
 egocentric :: DiscreteSpace 
            -> FuzzyMap
-egocentric space = fuzzyUnion observer 
-                 $ fuzzyUnion rottree 
-                 $ fuzzyUnion rothouse rothouseFront
- where fuzzyAngle = fuzzyAngleofFuzzyVector discreteSpace north 
+egocentric space = fuzzyUnionMap observer 
+                 $ fuzzyUnionMap rottree 
+                 $ fuzzyUnionMap rothouse rothouseFront
+ where fuzzyAngle = fuzzyAngleofFuzzyVector discreteSpace north
        rottree = fuzzyRotation discreteSpace tree fuzzyAngle 
        rothouse = fuzzyRotation discreteSpace largehouse  fuzzyAngle
        rothouseFront =fuzzyRotation discreteSpace realLargehouseFront  fuzzyAngle
@@ -328,7 +326,7 @@ exportSpatialTemplates = do
  putStrLn "exporting 'very far' tempaltes "
  exportVeryFarFigures
 
-allHereSpatialTemplates = map (fuzzyIntersection fuzzyHere) (allSpatialTemplates discreteSpace)
+allHereSpatialTemplates = map (fuzzyIntersectionMap fuzzyHere) (allSpatialTemplates discreteSpace)
  where fuzzyHere = fuzzyHereMap discreteSpace
 intHereSTem= GnuPlot.showFuzzyVectors discreteSpace allHereSpatialTemplates
 
@@ -341,7 +339,7 @@ pngHereSTem = GnuPlot.export3D discreteSpace allSpatialTemplateNames "figures/he
 pngMapHereSTem = GnuPlot.exportMap discreteSpace allSpatialTemplateNames "figures/here" allHereSpatialTemplates
 
 -- ** exports 'far' spatial templates
-allNearSpatialTemplates = map (fuzzyIntersection fuzzyNear) (allSpatialTemplates discreteSpace) 
+allNearSpatialTemplates = map (fuzzyIntersectionMap fuzzyNear) (allSpatialTemplates discreteSpace) 
  where fuzzyNear = fuzzyNearMap discreteSpace
 intNearSTem= GnuPlot.showFuzzyVectors discreteSpace allNearSpatialTemplates
 
@@ -355,7 +353,7 @@ pngMapNearSTem = GnuPlot.exportMap discreteSpace allSpatialTemplateNames "figure
 
 
 -- ** exports 'far' spatial templates
-allFarSpatialTemplates =  map (fuzzyIntersection fuzzyFar) (allSpatialTemplates discreteSpace)
+allFarSpatialTemplates =  map (fuzzyIntersectionMap fuzzyFar) (allSpatialTemplates discreteSpace)
  where fuzzyFar = fuzzyFarMap discreteSpace 
 intFarSTem= GnuPlot.showFuzzyVectors discreteSpace allFarSpatialTemplates
 
@@ -368,7 +366,7 @@ pngFarSTem = GnuPlot.export3D discreteSpace allSpatialTemplateNames "figures/far
 pngMapFarSTem = GnuPlot.exportMap discreteSpace allSpatialTemplateNames "figures/far" allFarSpatialTemplates
 
 -- ** exports 'very far' spatial templates
-allVeryFarSpatialTemplates =  map (fuzzyIntersection fuzzyVeryFar)  (allSpatialTemplates discreteSpace)
+allVeryFarSpatialTemplates =  map (fuzzyIntersectionMap fuzzyVeryFar)  (allSpatialTemplates discreteSpace)
  where fuzzyVeryFar = fuzzyVeryFarMap discreteSpace
  
 
@@ -396,7 +394,7 @@ intSPatTemplate = GnuPlot.showFuzzyVectors discreteSpace (allSpatialTemplates di
 exportAllFuzzyVectors= GnuPlot.exportFuzzyVectorstoPng discreteSpace names fuzzyVectors
  where names = ["Spoon","Fork","NearRight","SpoonUnionFork"]
        fuzzyVectors = [fuzzySpoonMap space,fuzzyForkMap space,fuzzyBackRightMap space,fuzzySpoonUnionFork]
-       fuzzySpoonUnionFork= fuzzyUnion fuzzySpoon fuzzyFork
+       fuzzySpoonUnionFork= fuzzyUnionMap fuzzySpoon fuzzyFork
        fuzzySpoon = fuzzySpoonMap space
        fuzzyFork = fuzzyForkMap space
        space = discreteSpace
