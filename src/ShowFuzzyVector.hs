@@ -46,7 +46,7 @@ printdiscreteMembership (dat,name,s) =  do
 
 
 
-createData :: DiscreteSpace              -- ^ space to work on
+createData :: DiscreteSpace           -- ^ space to work on
            -> FuzzyMap                -- ^ fuzzy vector to create data
            -> [(CrispVector,Double)] -- ^ (X,Y, membershipvalue) of the fuzzy vector
 createData space mu = Map.toList mu
@@ -63,10 +63,3 @@ fromFileTofuzzyVector :: FilePath
 fromFileTofuzzyVector name = Map.fromList list
  where list  = (read) .unsafePerformIO .readFile' $ (name++ ".txt")                      
 
-{-
--- | calculates for a space the membership values for the given fuzzy vector
-discretizeFuzzyVector :: DiscreteSpace -- ^ discrete space 
-                      -> FuzzyVector  -- ^ fuzzy vector
-                      -> Distribution -- ^ list with membership values for the discrete space
-discretizeFuzzyVector space mu  = map mu . createVectorDomain $ space
--}
