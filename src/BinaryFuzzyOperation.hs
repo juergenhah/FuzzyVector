@@ -11,19 +11,16 @@ Portability :
 
 Implementation of the binary operations for fuzzy vectors
 -}
-module BinaryFuzzyOperation ( fuzzyIntersection
-                            , fuzzyIntersection'
+module BinaryFuzzyOperation ( fuzzyIntersectionMap
+                            , fuzzyIntersection
+                            , fuzzyUnionMap
                             , fuzzyUnion
-                            , fuzzyUnion'
                             , fuzzyAdd
                             , fuzzySub
                             , center
-                           , scaleAasBtoC
-  --                          , scaleAasBtoC'
-                              , fuzzyComplement
-                              , fuzzyComplement'
---                              , binaryLookupTable
-                              ) where
+                            , scaleAasBtoC
+                            , fuzzyComplement
+                            ) where
 
 import Control.DeepSeq
 import Control.Parallel.Strategies
@@ -40,41 +37,34 @@ import FuzzyVector
 type BinaryVectorOperation = CrispVector -> CrispVector -> CrispVector
 
 -- | intersects two fuzzy vectors
-fuzzyIntersection' :: FuzzyVector -- ^ first fuzzy vector to intersect
+fuzzyIntersection :: FuzzyVector -- ^ first fuzzy vector to intersect
                    -> FuzzyVector -- ^ second fuzzy vector to intersect
                    -> FuzzyVector -- ^ intersected fuzzy vector
-fuzzyIntersection' muA muB v = min (muA v) (muB v)
+fuzzyIntersection muA muB v = min (muA v) (muB v)
 
-fuzzyIntersection :: FuzzyMap -- ^ first fuzzy vector to intersect
-                   -> FuzzyMap -- ^ second fuzzy vector to intersect
-                   -> FuzzyMap -- ^ intersected fuzzy vector
-fuzzyIntersection muA muB  = Map.unionWith min muA muB
+fuzzyIntersectionMap :: FuzzyMap -- ^ first fuzzy vector to intersect
+                      -> FuzzyMap -- ^ second fuzzy vector to intersect
+                      -> FuzzyMap -- ^ intersected fuzzy vector
+fuzzyIntersectionMap muA muB  = Map.unionWith min muA muB
 
 -- | unions two fuzzy vectors
-fuzzyUnion :: FuzzyMap -- ^ first fuzzy vector for union
-           -> FuzzyMap -- ^ second fuzzy vector for union
-           -> FuzzyMap -- ^ resulting fuzzy vector of the union
-fuzzyUnion muA muB  = Map.unionWith max muA muB
+fuzzyUnionMap :: FuzzyMap -- ^ first fuzzy vector for union
+              -> FuzzyMap -- ^ second fuzzy vector for union
+              -> FuzzyMap -- ^ resulting fuzzy vector of the union
+fuzzyUnionMap muA muB  = Map.unionWith max muA muB
 
-fuzzyUnion'  :: FuzzyVector -- ^ first fuzzy vector to intersect
+fuzzyUnion  :: FuzzyVector -- ^ first fuzzy vector to intersect
              -> FuzzyVector -- ^ second fuzzy vector to intersect
              -> FuzzyVector -- ^ intersected fuzzy vector
-fuzzyUnion' muA muB v = max (muA v) (muB v)
+fuzzyUnion muA muB v = max (muA v) (muB v)
 
 -- | calculates the complement of one fuzzy vector against the second one
-fuzzyComplement' :: FuzzyVector -- ^ first fuzzy vector
-                 -> FuzzyVector -- ^ second fuzzy vector
-                 -> FuzzyVector -- ^ complemented vector
-fuzzyComplement' muA muB v
+fuzzyComplement :: FuzzyVector -- ^ first fuzzy vector
+                    -> FuzzyVector -- ^ second fuzzy vector
+                    -> FuzzyVector -- ^ complemented vector
+fuzzyComplement muA muB v
  | (muA v - muB v) <0.0 = 0.0
  | otherwise = muA v - muB v
- 
-fuzzyComplement :: FuzzyMap -- ^ first fuzzy vector
-                 -> FuzzyMap -- ^ second fuzzy vector
-                 -> FuzzyMap -- ^ complemented vector
-fuzzyComplement muA muB = Map.unionWith (\ a b ->if a-b <0
-                                                    then 0
-                                                    else a-b) muA muB
 
 -- | general binary fuzzy operation
 binaryFuzzyOperation :: DiscreteSpace           -- ^ discrete space to work on
